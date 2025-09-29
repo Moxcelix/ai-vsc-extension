@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "ai-assistant.helloWorld",
-        "title": "Hello World"
+        "command": "ai-assistant.askQuestion",
+        "title": "Ask Question"
       }
     ]
   },
@@ -39,6 +39,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "axios": "^1.12.2",
     "uuid": "^13.0.0"
   }
 }

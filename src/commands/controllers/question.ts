@@ -25,9 +25,8 @@ export class QuestionController{
         }, async (progress) => {
             try {
                 const answer = await this.usecase.execute(question);
-                vscode.window.showInformationMessage(
-                    `Question: ${question}\n Answer: ${answer}`
-                );
+
+                vscode.window.showInformationMessage(answer);
                 
             } catch (error) {
                 vscode.window.showErrorMessage(

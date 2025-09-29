@@ -1,8 +1,14 @@
+import * as dotenv from "dotenv";
+
+import * as path from 'path'
+
+dotenv.config({ path: path.join(__dirname, '../../.env') });
+
 export class Env {
-    public GigachatClientID :string = '01996760-13d1-7f11-8890-a26c15069f42';
-    public GigachatClientSecret: string = '6c981378-d8ff-43db-8045-639ff27a24e9';
-    public GigachatScope: string = 'GIGACHAT_API_PERS';
-    public GigachatApiUrl: string ='https://gigachat.devices.sberbank.ru/api/v1';
-    public GigachatTokenUrl:string = 'https://ngw.devices.sberbank.ru:9443/api/v2/oauth';
+    public GigachatClientID :string = process.env.GIGACHAT_CLIENT_ID as string;
+    public GigachatClientSecret: string = process.env.GIGACHAT_CLIENT_SECRET as string;
+    public GigachatScope: string = process.env.GIGACHAT_SCOPE as string;
+    public GigachatApiUrl: string =process.env.GIGACHAT_API_URL as string;
+    public GigachatTokenUrl:string = process.env.GIGACHAT_TOKEN_URL as string;
 
 }

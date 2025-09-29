@@ -1,6 +1,9 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 import { LLM } from '../domain/llm'
 import { Env } from '../config/env'
 import { randomUUID } from 'crypto';
+import axios from 'axios';
 
 export class GigachatLLM implements LLM {
     private clientId: string;
@@ -33,27 +36,20 @@ export class GigachatLLM implements LLM {
             'max_tokens': maxTokens,
             'stream': false
         };
-
-        const response = await fetch(`${this.baseUrl}/chat/completions`, {
-            method: 'POST',
-            headers: await this.getAuthHeaders(),
-            body: JSON.stringify(payload)
-        });
-
-        const content = await response.json() as {
-            choices: Array<{
-                message: {
-                    content: string
-                }
-            }>
-        };
-
-        return content.choices[0].message.content; 
+        const response = await axios.post(
+            `${this.baseUrl}/chat/completions`,
+            payload,
+            {
+                headers: await this.getAuthHeaders(),
+                timeout: 30000
+            }
+        );
+        return response.data.choices[0].message.content;
     }
 
     private getBasicAuthHeader(): string {
-        let credentials: string = `${this.clientId}:${this.clientSecret}`; 
-        let encodedCredentials: string = Buffer.from(credentials).toString('base64');
+        const credentials = `${this.clientId}:${this.clientSecret}`; 
+        const encodedCredentials = Buffer.from(credentials).toString('base64');
         return `Basic ${encodedCredentials}`;
     }
 
@@ -62,27 +58,22 @@ export class GigachatLLM implements LLM {
             return this.accessToken.token;
         }
 
-        const headers = {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'RqUID': randomUUID(),
-            'Authorization': this.getBasicAuthHeader()
-        }
-
-        const data = new URLSearchParams({
+        const data = {
             'scope': this.scope
+        };
+
+        const response = await axios.post(this.tokenUrl, data, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json',
+                'RqUID': randomUUID(),
+                'Authorization': this.getBasicAuthHeader()
+            },
+            timeout: 10000
         });
-
-        const response = await fetch(this.tokenUrl, {
-            method: 'POST',
-            body: data, 
-            headers: headers,
-        });
-
-        const content = await response.json() as { access_token: string, expires_in: number };
-
-        this.accessToken.token = content.access_token;
-        this.accessToken.expiresAt = Date.now() + (content.expires_in * 1000) - 60000;
+            
+        this.accessToken.token = response.data.access_token;
+        this.accessToken.expiresAt = Date.now() + (response.data.expires_in * 1000) - 60000;
 
         return this.accessToken.token;
     }

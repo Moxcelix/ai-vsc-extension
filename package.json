@@ -16,6 +16,10 @@
       {
         "command": "ai-assistant.askQuestion",
         "title": "Ask Question"
+      },
+      {
+        "command": "ai-assistant.editFile",
+        "title": "Edit File"
       }
     ]
   },

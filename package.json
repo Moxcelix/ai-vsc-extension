@@ -14,8 +14,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "ai-assistant.helloWorld",
-        "title": "Hello World"
+        "command": "ai-assistant.askQuestion",
+        "title": "Ask Question"
+      },
+      {
+        "command": "ai-assistant.editFile",
+        "title": "Edit File"
       }
     ]
   },
@@ -28,14 +32,19 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.104.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
+    "@types/vscode": "^1.104.0",
     "@typescript-eslint/eslint-plugin": "^8.42.0",
     "@typescript-eslint/parser": "^8.42.0",
-    "eslint": "^9.34.0",
-    "typescript": "^5.9.2",
     "@vscode/test-cli": "^0.0.11",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.34.0",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "axios": "^1.12.2",
+    "dotenv": "^17.2.2",
+    "uuid": "^13.0.0"
   }
 }
